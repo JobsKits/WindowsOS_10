@@ -8,7 +8,34 @@
 
 Jobs 维护的 Windows 10 镜像资料子仓。父仓 [WindowsOS](../README.md) 管理 Git 子模块关联与按需下载，镜像附件来自 [**GitHub Releases**](https://github.com/JobsKits/WindowsOS_10/releases)，下载后位于本地 `Releases/<标签>/`，由本地 Git 排除规则忽略。
 
-## 一、<span id="portable-tools">双端分卷工具</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+## 一、<span id="repository-release">下载当前仓库 Release</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
+
+本仓可单独克隆，也可作为父仓子模块使用。两个平台入口只查询和下载 [JobsKits/WindowsOS_10 的 Release](https://github.com/JobsKits/WindowsOS_10/releases)，不提供其它仓库选择；脚本按自身位置定位本仓，不依赖父仓下载器或启动目录。运行前核验本仓 Git 根与 GitHub remote 的固定身份，remote 名称不限；缺少对应来源时停止，不把上层父仓当成本仓。
+
+| 平台 | 版本根快捷入口 | 实施脚本与说明 |
+| --- | --- | --- |
+| [**MacOS**](https://www.apple.com/macos/) | [【MacOS】⏬下载当前仓库Release.command](<./【MacOS】⏬下载当前仓库Release.command>) | [MacOS 下载说明](<./MacOS/【MacOS】⏬下载当前仓库Release.command/README.md>) |
+| [**Windows**](https://www.microsoft.com/windows) | [【WindowsOS】⏬下载当前仓库Release.cmd](<./【WindowsOS】⏬下载当前仓库Release.cmd>) | [WindowsOS 下载说明](<./WindowsOS/【WindowsOS】⏬下载当前仓库Release.cmd/README.md>) |
+
+### [【MacOS】⏬下载当前仓库Release.command](<./【MacOS】⏬下载当前仓库Release.command>)
+
+> **目的：** 在 MacOS 选择本仓 Release 和附件，下载到本仓 `Releases/<编码标签>/`。
+
+- 根快捷入口转交 `MacOS/【MacOS】⏬下载当前仓库Release.command/【MacOS】⏬下载当前仓库Release.command`，先阅读自述、回车继续，再通过 [**fzf**](https://formulae.brew.sh/formula/fzf) 选择版本和附件；最终下载提示后，空行或纯空白（含 Space／Tab）后回车开始，仅包含非空白文本的回答不执行。
+- 只检查依赖，不自动安装；需要系统 [**zsh**](https://www.zsh.org/)、[**Git**](https://git-scm.com/)、[**curl**](https://curl.se/)、[**jq**](https://jqlang.org/)、shasum 和 fzf。`--help` 查看帮助，`--list` 只读查询本仓全部发布版本及附件，无需 fzf。
+- 选中任意 ISO 分卷时补齐同组，支持断点续传、大小及 API 可用的 SHA-256 校验；已有完整文件校验后跳过，同名冲突保留并停止。全部完成后仅执行同版目录已有的 `merge.command`；缺失正常跳过，不补下载或复制合并工具。
+
+### [【WindowsOS】⏬下载当前仓库Release.cmd](<./【WindowsOS】⏬下载当前仓库Release.cmd>)
+
+> **目的：** 在 Windows 原生终端选择并下载本仓 Release，无需 MacOS 或父仓脚本。
+
+- 根快捷入口转交 `WindowsOS/【WindowsOS】⏬下载当前仓库Release.cmd/【WindowsOS】⏬下载当前仓库Release.cmd`，由同目录 `【WindowsOS】⏬下载当前仓库Release.ps1` 实施。需要 Windows 10 或更新版本、[**PowerShell**](https://learn.microsoft.com/powershell/) 5.1 或更新版本、Git 和 fzf；镜像仓名不代表支持在对应旧系统运行工具。
+- 首屏自述仍为回车继续、非空输入取消；选择后等待最终下载提示，空行或纯空白（含 Space／Tab）后回车开始，仅包含非空白文本的回答不执行；`-Help` 查看帮助，`-List` 只读查询本仓清单，无需 fzf。分卷补齐、断点、大小及 API 可用的 SHA-256 校验与已有文件保护均在本仓执行。
+- 下载完成后手工使用 [WindowsOS 子卷合并工具](<./WindowsOS/【WindowsOS】子卷合并/README.md>)；不运行 MacOS 合并入口。
+
+确认下载后，入口仅在本仓 Git 元数据的 `info/exclude` 追加精确的 `/Releases/` 本地忽略规则，不修改受跟踪的 `.gitignore`。每版使用排他下载锁；网络传输失败持续退避重试，`Ctrl+C` 取消并保留完成文件与断点；本地错误和不安全路径停止。帮助、清单不创建附件目录，清单失败直接报错；日志在系统临时目录。
+
+## 二、<span id="portable-tools">双端分卷工具</span> <a href="#前言" style="font-size:17px; color:green;"><b>🔼</b></a> <a href="#🔚" style="font-size:17px; color:green;"><b>🔽</b></a>
 
 | 路径 | 职责 |
 | --- | --- |
